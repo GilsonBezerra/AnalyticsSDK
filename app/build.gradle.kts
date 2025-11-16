@@ -16,8 +16,6 @@ android {
         applicationId = "br.com.lithiumcode.analyticssdk"
         minSdk = 24
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -57,7 +55,7 @@ dependencies {
     implementation(libs.firebase.analytics.ktx)
 
     // LIBS
-    implementation("com.github.GilsonBezerra:AnalyticsSDK:v1.0.2")
+    implementation("com.github.GilsonBezerra:AnalyticsSDK:v1.0.3")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
