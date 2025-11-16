@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # necessário para ler histórico de tags
 
       - name: Configurar JDK
         uses: actions/setup-java@v4
@@ -27,18 +29,22 @@ jobs:
       - name: Calcular nova versão
         id: version
         run: |
-          CURRENT_VERSION=$(git tag --sort=-v:refname | head -n 1 | sed 's/v//')
-          if [ -z "$CURRENT_VERSION" ]; then
-            CURRENT_VERSION="1.0.0"
-          fi
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+          CURRENT_VERSION=${LAST_TAG#v}
+
           IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
           NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "Nova versão: $NEW_VERSION"
 
-      - name: Atualizar versão no Gradle
+      - name: Atualizar versão no gradle.properties
         run: |
-          sed -i "s/findProperty(\"VERSION_NAME\") ?: \".*\"/findProperty(\"VERSION_NAME\") ?: \"${{ steps.version.outputs.new_version }}\"/" build.gradle.kts
+          if grep -q "VERSION_NAME" gradle.properties; then
+            sed -i "s/VERSION_NAME=.*/VERSION_NAME=${{ steps.version.outputs.new_version }}/" gradle.properties
+          else
+            echo "VERSION_NAME=${{ steps.version.outputs.new_version }}" >> gradle.properties
+          fi
 
       - name: Build SDK
         run: ./gradlew clean assembleRelease
@@ -47,10 +53,11 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.new_version }}
-          name: Release v${{ steps.version.outputs.new_version }}
+          name: "Release v${{ steps.version.outputs.new_version }}"
           body: |
-            📦 Nova versão do SDK publicada automaticamente!
-            Versão: **${{ steps.version.outputs.new_version }}**
+            🚀 Nova versão do SDK publicada automaticamente!
+            • Versão: **${{ steps.version.outputs.new_version }}**
+            • Build gerado a partir de PR para a branch master.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -58,5 +65,5 @@ jobs:
         run: ./gradlew publish
         env:
           VERSION_NAME: ${{ steps.version.outputs.new_version }}
-          GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
