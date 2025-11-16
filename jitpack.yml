@@ -1,4 +1,12 @@
 jdk:
-  - openjdk11
+  - openjdk17
+
 before_install:
-  - ./scripts/prepareJitpackEnvironment.sh
+# Remova essa linha se você não usa mais scripts
+# - ./scripts/prepareJitpackEnvironment.sh
+
+install:
+  - echo "Using JDK 17"
+
+script:
+  - ./gradlew clean assemble publishToMavenLocal -PVERSION_NAME=${VERSION}

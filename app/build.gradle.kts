@@ -56,8 +56,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics.ktx)
 
-    implementation("com.github.GilsonBezerra:AnalyticsSDK:1.0")
-    implementation(project(":analytics-sdk"))
+    // LIBS
+    implementation("com.github.GilsonBezerra:AnalyticsSDK:v1.0.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
