@@ -68,9 +68,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Permitir execução do Gradle Wrapper
+        run: chmod +x ./gradlew
+
       - name: Publicar no GitHub Packages
         run: ./gradlew publish
         env:
           VERSION_NAME: ${{ steps.version.outputs.new }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
+
