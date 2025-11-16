@@ -1,3 +1,10 @@
+import java.util.Properties
+val versionProps = Properties().apply {
+    load(rootProject.file("version.properties").inputStream())
+}
+
+version = versionProps["VERSION_NAME"].toString()
+
 plugins {
     alias(libs.plugins.android.library)
     id("org.jetbrains.kotlin.android")
