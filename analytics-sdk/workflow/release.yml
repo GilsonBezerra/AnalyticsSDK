@@ -6,7 +6,7 @@ on:
     types: [ closed ]
 
 permissions:
-  contents: write   # agora funciona de verdade
+  contents: write
   packages: write
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
-          ref: master   # obrigatório no pull_request_target
+          ref: master
 
       - name: Create tag
         id: tag
