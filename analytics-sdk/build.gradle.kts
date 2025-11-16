@@ -54,7 +54,7 @@ afterEvaluate {
                 groupId = "br.com.lithiumcode"
                 artifactId = "analytics-sdk"
                 version =
-                    (System.getProperty("VERSION_NAME") ?: project.findProperty("VERSION_NAME") ?: "1.0.0") as String?
+                    versionProps["VERSION_NAME"].toString()
 
             }
         }
