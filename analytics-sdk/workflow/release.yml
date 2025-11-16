@@ -1,7 +1,7 @@
 name: Release SDK
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened, synchronize]
     branches:
       - master
@@ -18,7 +18,8 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # necessário para ler histórico de tags
+          fetch-depth: 0  # necessário para tags
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Configurar JDK
         uses: actions/setup-java@v4
@@ -57,7 +58,7 @@ jobs:
           body: |
             🚀 Nova versão do SDK publicada automaticamente!
             • Versão: **${{ steps.version.outputs.new_version }}**
-            • Build gerado a partir de PR para a branch master.
+            • Gerada automaticamente a partir do PR #${{ github.event.pull_request.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
