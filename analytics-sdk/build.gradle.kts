@@ -48,14 +48,30 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("release") {
-                from(components["release"])
                 groupId = "br.com.lithiumcode"
                 artifactId = "analytics-sdk"
                 version = versionProps["VERSION_NAME"].toString()
+
+                afterEvaluate {
+                    val aar = components["release"]
+                    from(aar)
+                }
+            }
+        }
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/GilsonBezerra")
+
+                credentials {
+                    username = System.getenv("GH_PACKAGES_USER")
+                    password = System.getenv("GH_PACKAGES_TOKEN")
+                }
             }
         }
     }
 }
+
 
 dependencies {
     implementation(libs.androidx.core.ktx)
