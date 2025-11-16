@@ -1,0 +1,62 @@
+name: Release SDK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Calcular nova versão
+        id: version
+        run: |
+          CURRENT_VERSION=$(git tag --sort=-v:refname | head -n 1 | sed 's/v//')
+          if [ -z "$CURRENT_VERSION" ]; then
+            CURRENT_VERSION="1.0.0"
+          fi
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+          NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Nova versão: $NEW_VERSION"
+
+      - name: Atualizar versão no Gradle
+        run: |
+          sed -i "s/findProperty(\"VERSION_NAME\") ?: \".*\"/findProperty(\"VERSION_NAME\") ?: \"${{ steps.version.outputs.new_version }}\"/" build.gradle.kts
+
+      - name: Build SDK
+        run: ./gradlew clean assembleRelease
+
+      - name: Criar Release no GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.new_version }}
+          name: Release v${{ steps.version.outputs.new_version }}
+          body: |
+            📦 Nova versão do SDK publicada automaticamente!
+            Versão: **${{ steps.version.outputs.new_version }}**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publicar no GitHub Packages
+        run: ./gradlew publish
+        env:
+          VERSION_NAME: ${{ steps.version.outputs.new_version }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
