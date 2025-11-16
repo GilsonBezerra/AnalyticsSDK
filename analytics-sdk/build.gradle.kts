@@ -3,8 +3,6 @@ val versionProps = Properties().apply {
     load(rootProject.file("version.properties").inputStream())
 }
 
-version = versionProps["VERSION_NAME"].toString()
-
 plugins {
     alias(libs.plugins.android.library)
     id("org.jetbrains.kotlin.android")
@@ -53,9 +51,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "br.com.lithiumcode"
                 artifactId = "analytics-sdk"
-                version = "1.0.2"
-
-
+                version = versionProps["VERSION_NAME"].toString()
             }
         }
     }
