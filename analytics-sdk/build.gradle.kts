@@ -53,8 +53,8 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "br.com.lithiumcode"
                 artifactId = "analytics-sdk"
-                version =
-                    versionProps["VERSION_NAME"].toString()
+                version = "1.0.2"
+
 
             }
         }
