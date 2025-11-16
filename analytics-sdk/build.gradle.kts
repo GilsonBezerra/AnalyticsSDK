@@ -46,7 +46,9 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "br.com.lithiumcode"
                 artifactId = "analytics-sdk"
-                version = (findProperty("VERSION_NAME") ?: "1.0.0") as String?
+                version =
+                    (System.getProperty("VERSION_NAME") ?: project.findProperty("VERSION_NAME") ?: "1.0.0") as String?
+
             }
         }
     }
@@ -60,6 +62,11 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.play.services.measurement.api)
+    val composeBom = platform("androidx.compose:compose-bom:2024.10.00")
+    implementation(composeBom)
+
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material3:material3")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
