@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   release:
@@ -38,15 +39,12 @@ jobs:
       - name: Criar tag
         run: |
           TAG="v${{ steps.version.outputs.versao }}"
-
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "Tag $TAG já existe — pulando criação."
             exit 0
           fi
-
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-
           git tag -a "$TAG" -m "Release $TAG"
           git push origin "$TAG"
 
@@ -62,5 +60,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build para validar
-        run: ./gradlew :analytics-sdk:publishToMavenLocal --stacktrace --no-daemon
+      - name: Publicar no GitHub Packages
+        run: ./gradlew publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
