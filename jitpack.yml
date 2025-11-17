@@ -1,12 +1,22 @@
 jdk:
   - openjdk17
 
+android:
+  components:
+    - build-tools-36.0.0
+    - android-36
+    - platform-tools
+
 before_install:
-# Remova essa linha se você não usa mais scripts
-# - ./scripts/prepareJitpackEnvironment.sh
+  # Garantir permissão para o gradlew
+  - chmod +x ./gradlew
 
 install:
-  - echo "Using JDK 17"
+  # JitPack precisa rodar um build completo para gerar o .AAR
+  - ./gradlew :analytics-sdk:assembleRelease --stacktrace --no-daemon
 
-script:
-  - ./gradlew clean assemble publishToMavenLocal -PVERSION_NAME=${VERSION}
+env:
+  # Evitar problemas com buffer de logs no JitPack
+  global:
+    - GRADLE_OPTS="-Xmx4g -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs='-Xmx4g'"
+
