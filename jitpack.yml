@@ -11,4 +11,4 @@ before_install:
   - chmod +x ./gradlew
 
 install:
-  - ./gradlew :analytics-sdk:installRelease --stacktrace --no-daemon
+  - ./gradlew :analytics-sdk:assembleRelease --stacktrace --no-daemon
