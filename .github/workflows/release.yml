@@ -56,9 +56,11 @@ jobs:
           tag_name: v${{ steps.version.outputs.versao }}
           name: Release v${{ steps.version.outputs.versao }}
           body: |
-            🚀 Nova versão publicada automaticamente!
-            • PR: #${{ github.event.pull_request.number }}
-            • Versão: **${{ steps.version.outputs.versao }}**
+            Nova versão gerada automaticamente.
+            PR: #${{ github.event.pull_request.number }}
+            Versão: ${{ steps.version.outputs.versao }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build para validar
         run: ./gradlew :analytics-sdk:assembleRelease
