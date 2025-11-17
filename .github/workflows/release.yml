@@ -14,24 +14,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout do commit mergeado
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
 
-      # 2. Permissão ao Gradle
       - name: Permissão gradlew
         run: chmod +x gradlew
 
-      # 3. Setup JDK 17
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "temurin"
 
-      # 4. Ler versão do version.properties
       - name: Ler versão
         id: version
         run: |
@@ -39,7 +35,6 @@ jobs:
           echo "versao=$VERSION" >> $GITHUB_OUTPUT
           echo "Versão detectada: $VERSION"
 
-      # 5. Criar tag (vX.X.X)
       - name: Criar tag
         run: |
           TAG="v${{ steps.version.outputs.versao }}"
@@ -55,19 +50,17 @@ jobs:
           git tag -a "$TAG" -m "Release $TAG"
           git push origin "$TAG"
 
-      # 6. Criar Release no GitHub (que o JitPack vai usar)
       - name: Criar Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.versao }}
           name: Release v${{ steps.version.outputs.versao }}
           body: |
-            🚀 Nova versão publicada automaticamente!
-            • PR: #${{ github.event.pull_request.number }}
-            • Versão: **${{ steps.version.outputs.versao }}**
+            Nova versão gerada automaticamente.
+            PR: #${{ github.event.pull_request.number }}
+            Versão: ${{ steps.version.outputs.versao }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 7. Build opcional para validação (JitPack não precisa, mas útil)
       - name: Build para validar
         run: ./gradlew :analytics-sdk:assembleRelease
