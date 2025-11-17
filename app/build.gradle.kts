@@ -53,9 +53,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
 
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics.ktx)
-
     // LIBS
     implementation(project(":analytics-sdk"))
 
