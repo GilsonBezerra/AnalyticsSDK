@@ -3,20 +3,12 @@ jdk:
 
 android:
   components:
-    - build-tools-36.0.0
-    - android-36
+    - build-tools-34.0.0
+    - android-34
     - platform-tools
 
 before_install:
-  # Garantir permissão para o gradlew
   - chmod +x ./gradlew
 
 install:
-  # JitPack precisa rodar um build completo para gerar o .AAR
-  - ./gradlew :analytics-sdk:assembleRelease --stacktrace --no-daemon
-
-env:
-  # Evitar problemas com buffer de logs no JitPack
-  global:
-    - GRADLE_OPTS="-Xmx4g -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs='-Xmx4g'"
-
+  - ./gradlew :analytics-sdk:installRelease --stacktrace --no-daemon
