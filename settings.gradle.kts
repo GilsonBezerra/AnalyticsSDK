@@ -19,13 +19,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.github.com/GilsonBezerra/AnalyticsSDK")
-            credentials {
-                username = System.getenv("GH_PACKAGES_USER")
-                password = System.getenv("GH_PACKAGES_TOKEN")
-            }
-        }
     }
 }
 

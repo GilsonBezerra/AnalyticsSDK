@@ -1,4 +1,5 @@
 import java.util.Properties
+
 val versionProps = Properties().apply {
     load(rootProject.file("version.properties").inputStream())
 }
@@ -44,29 +45,15 @@ android {
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                groupId = "br.com.lithiumcode"
-                artifactId = "analytics-sdk"
-                version = versionProps["VERSION_NAME"].toString()
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            groupId = "com.github.GilsonBezerra"
+            artifactId = "AnalyticsSDK"
+            version = versionProps["VERSION_NAME"].toString()
 
-                afterEvaluate {
-                    val aar = components["release"]
-                    from(aar)
-                }
-            }
-        }
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/GilsonBezerra")
-
-                credentials {
-                    username = System.getenv("GH_PACKAGES_USER")
-                    password = System.getenv("GH_PACKAGES_TOKEN")
-                }
+            afterEvaluate {
+                from(components["release"])
             }
         }
     }
