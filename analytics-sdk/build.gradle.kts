@@ -44,6 +44,12 @@ android {
         compose = true
     }
 }
+configurations.all {
+    resolutionStrategy {
+        force("com.google.android.gms:play-services-measurement-base:23.0.0")
+        force("com.google.android.gms:play-services-measurement-impl:23.0.0")
+    }
+}
 
 publishing {
     publications {
@@ -70,6 +76,9 @@ dependencies {
     implementation(libs.play.services.measurement.api)
     val composeBom = platform("androidx.compose:compose-bom:2024.10.00")
     implementation(composeBom)
+
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
