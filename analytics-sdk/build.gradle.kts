@@ -46,7 +46,6 @@ android {
 }
 configurations.all {
     resolutionStrategy {
-        // Use the newest version (e.g., 23.0.0)
         force("com.google.android.gms:play-services-measurement-base:23.0.0")
         force("com.google.android.gms:play-services-measurement-impl:23.0.0")
     }
