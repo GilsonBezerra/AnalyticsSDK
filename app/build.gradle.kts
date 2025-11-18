@@ -41,11 +41,6 @@ android {
     buildFeatures {
         compose = true
     }
-    configurations.all {
-        resolutionStrategy {
-            force("com.google.android.gms:play-services-measurement:23.0.0")
-        }
-    }
 }
 
 dependencies {
@@ -57,8 +52,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
 
     // LIBS
     implementation(project(":analytics-sdk"))
