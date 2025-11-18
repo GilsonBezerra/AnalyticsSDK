@@ -77,9 +77,6 @@ dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2024.10.00")
     implementation(composeBom)
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
 
